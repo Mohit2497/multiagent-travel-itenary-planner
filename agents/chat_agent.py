@@ -1,5 +1,3 @@
-# Enhanced chat_agent.py - Replace your existing chat_node function
-
 from langchain_core.messages import HumanMessage
 from llm_helper import get_llm
 import json
@@ -24,63 +22,69 @@ def chat_node(state):
     holiday_type = preferences.get('holiday_type', 'trip')
     num_people = preferences.get('num_people', '1')
     month = preferences.get('month', '')
-    comments = preferences.get('comments', '')
+    
+    # Conversation starters and personality elements
+    friendly_greetings = [
+        "Great question!",
+        "I love helping with that!",
+        "Ooh, interesting!",
+        "That's a fantastic question!",
+        "I'm excited to help with this!",
+        "Perfect timing for this question!"
+    ]
     
     # Build conversation history context
     recent_context = ""
     if chat_history and len(chat_history) > 0:
-        recent_context = "\n\nRecent conversation:\n"
-        for chat in chat_history[-2:]:  # Last 2 exchanges for context
-            recent_context += f"User: {chat['question']}\nYou: {chat['response'][:150]}...\n"
-    
-    # Extract specific details from itinerary for context
-    itinerary_context = ""
-    if itinerary:
-        itinerary_context = f"\n\nCurrent itinerary highlights:\n{itinerary[:800]}..."
+        recent_context = "\n\nRecent conversation context:\n"
+        for chat in chat_history[-3:]:  # Last 3 exchanges
+            recent_context += f"User asked: {chat['question']}\n"
+            recent_context += f"I responded: {chat['response'][:100]}...\n"
     
     # Create a comprehensive, conversational prompt
     prompt = f"""
-    You are a friendly, knowledgeable AI travel assistant helping someone with their {holiday_type} to {destination}. 
-    You're like a helpful local friend who knows all the insider secrets.
+    You are an enthusiastic, knowledgeable, and friendly AI travel assistant helping with a {holiday_type} trip to {destination}. 
     
-    PERSONALITY:
-    - Conversational and warm (talk like a knowledgeable friend, not a robot)
-    - Enthusiastic about travel discoveries
-    - Give SPECIFIC recommendations with actual names, locations, and practical details
-    - Reference their actual trip plans when relevant
-    - Keep responses focused and helpful (2-4 sentences usually)
-    - Use natural language, occasional emojis, but don't overdo it
+    PERSONALITY TRAITS:
+    - Conversational and warm (like talking to a travel-savvy friend)
+    - Enthusiastic about travel and discoveries
+    - Specific and practical (avoid generic advice)
+    - Use the traveler's name/trip details to personalize responses
+    - Share insider tips and local knowledge
+    - Ask follow-up questions when appropriate
+    - Use emojis sparingly but effectively
     
-    TRAVELER'S TRIP DETAILS:
-    - Going to: {destination}
-    - When: {month}
-    - Duration: {duration} days  
-    - Group size: {num_people} people
-    - Budget level: {budget_type}
-    - Trip style: {holiday_type}
-    - Special notes: {comments}
-    {itinerary_context}
+    TRIP CONTEXT:
+    - Destination: {destination}
+    - Duration: {duration} days
+    - Travel Month: {month}
+    - Group: {num_people} people
+    - Budget: {budget_type}
+    - Style: {holiday_type}
+    - Current Itinerary: {itinerary[:500]}... (truncated)
+    
     {recent_context}
     
     CURRENT QUESTION: "{user_question}"
     
-    RESPONSE RULES:
-    1. Be conversational and specific - avoid generic travel advice
-    2. Reference their actual trip details when relevant (dates, group size, budget, etc.)
-    3. Give concrete recommendations with names, locations, prices when possible
-    4. Connect answers to their existing itinerary if relevant
-    5. Keep it helpful but concise (usually 2-4 sentences)
-    6. If you don't have specific info, be honest but still helpful
-    7. Ask a follow-up question if it would be useful
+    RESPONSE GUIDELINES:
+    1. Start with a friendly, engaging opener (not generic like "That's a great question")
+    2. Reference their specific trip details (destination, dates, group size, etc.)
+    3. Give SPECIFIC recommendations with names, addresses, or exact details when possible
+    4. Include practical tips (timing, costs, booking advice, insider secrets)
+    5. Connect to their itinerary when relevant
+    6. End with a follow-up question or offer for more help
+    7. Keep it conversational (100-200 words max unless they ask for detailed info)
+    8. Avoid generic travel advice - be specific to their destination and situation
     
-    EXAMPLES OF GOOD RESPONSES:
-    ❌ Generic: "There are many great restaurants in the area."
-    ✅ Specific: "For authentic pasta near the Colosseum, try Flavio al Velavevodetto - it's about 15 minutes from your Day 2 plans and locals love it. Expect around €15-20 per person for your budget level."
+    EXAMPLES OF SPECIFIC VS GENERIC:
+    ❌ Generic: "Try local restaurants and popular attractions"
+    ✅ Specific: "For authentic {destination} cuisine, hit up [specific restaurant name] on [street name] - they're known for [specific dish]. It's about a 10-minute walk from your Day 2 museum visit!"
     
-    ❌ Generic: "Pack according to the weather."
-    ✅ Specific: "Since you're going in {month}, definitely pack layers - mornings can be chilly but afternoons warm up. A light rain jacket would be smart for your outdoor activities on Day 3."
+    ❌ Generic: "Check the weather and pack accordingly"
+    ✅ Specific: "Since you're visiting {destination} in {month}, expect [specific weather]. Pack layers because mornings can be [temperature] but afternoons warm up to [temperature]."
     
-    Respond naturally as if you're chatting with a friend who's excited about their upcoming trip!
+    Respond naturally and conversationally, as if you're a knowledgeable local friend helping them plan the perfect trip!
     """
     
     try:
@@ -95,15 +99,6 @@ def chat_node(state):
                 response = parsed.get("response", response)
             except:
                 pass
-        
-        # Ensure response isn't too long for chat interface
-        if len(response) > 500:
-            # Try to cut at a sentence boundary
-            sentences = response.split('. ')
-            truncated = '. '.join(sentences[:3])
-            if not truncated.endswith('.'):
-                truncated += '.'
-            response = truncated + " (Want me to elaborate on anything specific?)"
         
         # Add to chat history
         chat_entry = {
@@ -121,13 +116,7 @@ def chat_node(state):
         
     except Exception as e:
         # Friendly error message
-        error_responses = [
-            f"Oops! I'm having a small hiccup. But I'm still excited to help with your {destination} trip! Try asking again? 😊",
-            f"Hmm, something went wonky on my end. But I'm here and ready to chat about your {destination} adventure! Give it another shot?",
-            f"Technical blip on my side! But I'm pumped to help make your {destination} trip amazing. Try your question again?"
-        ]
-        
-        error_response = random.choice(error_responses)
+        error_response = f"Oops! I'm having a small technical hiccup right now. But I'm still here to help with your {destination} trip! Could you try asking your question again? 😊"
         
         chat_entry = {
             "question": user_question, 

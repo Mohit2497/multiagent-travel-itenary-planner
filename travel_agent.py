@@ -530,125 +530,189 @@ if st.session_state.state.get("itinerary"):
                                 st.info(f"Click the corresponding button above to get {key.replace('_', ' ')}.")
         # ========== ENHANCED RESULTS DISPLAY END ==========
 
-    # Enhanced Chat Interface for Travel Agent
-# Replace the chat section in your travel_agent.py (around line 425)
-
-    # ========== ENHANCED CHAT INTERFACE START ==========
+    # ========== ENHANCED CHAT INTERFACE START - LINE 425 ==========
     with col_chat:
         # Enhanced chat header with trip info
         st.markdown(f"""
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                    padding: 1rem; border-radius: 15px 15px 0 0; 
+                    padding: 1.2rem; border-radius: 20px 20px 0 0; 
                     text-align: center; color: white; margin-bottom: 0;
-                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <h4 style="margin: 0; font-size: 1.2rem;">💬 Your AI Travel Buddy</h4>
-            <p style="margin: 0.3rem 0 0 0; font-size: 0.85rem; opacity: 0.9;">
-                Ask me about your {st.session_state.state['preferences'].get('destination', 'trip')} adventure!
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <h3 style="margin: 0; font-size: 1.5rem; font-weight: 600;">💬 Your AI Travel Buddy</h3>
+            <p style="margin: 0.5rem 0 0 0; font-size: 0.95rem; opacity: 0.95;">
+                Ask me anything about your {st.session_state.state['preferences'].get('destination', 'trip')} adventure! ✨
             </p>
         </div>
         """, unsafe_allow_html=True)
         
-        # Create a fixed-height chat container with proper styling
-        chat_container_height = "400px" if st.session_state.state["chat_history"] else "200px"
+        # Enhanced chat container
+        st.markdown("""
+        <div style="background: linear-gradient(145deg, #f8f9fb 0%, #e9ecef 100%); 
+                    border-radius: 0 0 20px 20px; 
+                    padding: 1.5rem; min-height: 400px; max-height: 500px; 
+                    overflow-y: auto; border: 2px solid #e3e7f1;
+                    box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);">
+        """, unsafe_allow_html=True)
         
-        # Chat messages container with dynamic height
-        with st.container():
-            st.markdown(f"""
-            <div id="chat-container" style="
-                background: white; 
-                border: 2px solid #e3e7f1;
-                border-top: none;
-                min-height: {chat_container_height}; 
-                max-height: 500px; 
-                overflow-y: auto; 
-                padding: 1rem;
-                border-radius: 0 0 15px 15px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            ">
-            """, unsafe_allow_html=True)
-            
-            # Chat messages with enhanced styling
-            if st.session_state.state["chat_history"]:
-                for i, chat in enumerate(st.session_state.state["chat_history"]):
-                    # User message
-                    st.markdown(f"""
-                    <div style="display: flex; justify-content: flex-end; margin: 0.8rem 0;">
-                        <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); 
-                                    color: white; padding: 10px 15px; border-radius: 18px 18px 4px 18px; 
-                                    max-width: 75%; box-shadow: 0 2px 8px rgba(79, 172, 254, 0.3);
-                                    font-size: 0.9rem; line-height: 1.4; word-wrap: break-word;">
-                            {chat['question']}
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                    # AI response
-                    st.markdown(f"""
-                    <div style="display: flex; justify-content: flex-start; margin: 0.8rem 0;">
-                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                                    color: white; padding: 12px 16px; border-radius: 18px 18px 18px 4px; 
-                                    max-width: 80%; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-                                    font-size: 0.9rem; line-height: 1.5; word-wrap: break-word;">
-                            <div style="display: flex; align-items: center; margin-bottom: 6px;">
-                                <span style="font-size: 1rem; margin-right: 6px;">🤖</span>
-                                <strong style="font-size: 0.8rem; opacity: 0.9;">AI Buddy</strong>
-                            </div>
-                            {chat['response']}
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-            else:
-                # Compact welcome message for empty state
-                st.markdown("""
-                <div style="text-align: center; padding: 1.5rem 0.5rem; color: #6c757d;">
-                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">🤖✈️</div>
-                    <h5 style="color: #495057; margin-bottom: 1rem;">Ready to help with your trip!</h5>
-                    <p style="font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.4;">
-                        I'm here to answer questions about your itinerary, suggest local spots, 
-                        help with logistics, and make your trip amazing!
-                    </p>
-                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
-                        <p style="margin-bottom: 0.5rem; font-weight: 600; color: #495057; font-size: 0.85rem;">💡 Try asking:</p>
-                        <p style="margin: 0.3rem 0; color: #6c757d; font-size: 0.8rem;">"Best local restaurants near my hotel?"</p>
-                        <p style="margin: 0.3rem 0; color: #6c757d; font-size: 0.8rem;">"What if it rains on day 2?"</p>
-                        <p style="margin: 0.3rem 0; color: #6c757d; font-size: 0.8rem;">"Hidden gems locals love?"</p>
+        # Chat messages with enhanced styling
+        if st.session_state.state["chat_history"]:
+            for i, chat in enumerate(st.session_state.state["chat_history"]):
+                # User message with modern bubble design
+                st.markdown(f"""
+                <div style="display: flex; justify-content: flex-end; margin: 1rem 0;">
+                    <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); 
+                                color: white; padding: 12px 18px; border-radius: 20px 20px 4px 20px; 
+                                max-width: 80%; box-shadow: 0 3px 10px rgba(79, 172, 254, 0.3);
+                                font-size: 0.95rem; line-height: 1.4;">
+                        <strong>You:</strong> {chat['question']}
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
-            
-            st.markdown("</div>", unsafe_allow_html=True)
+                
+                # AI response with enhanced styling
+                st.markdown(f"""
+                <div style="display: flex; justify-content: flex-start; margin: 1rem 0;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                color: white; padding: 15px 20px; border-radius: 20px 20px 20px 4px; 
+                                max-width: 85%; box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+                                font-size: 0.95rem; line-height: 1.5;">
+                        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                            <span style="font-size: 1.2rem; margin-right: 8px;">🤖</span>
+                            <strong style="font-size: 0.9rem; opacity: 0.9;">AI Travel Buddy</strong>
+                        </div>
+                        {chat['response']}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+        else:
+            # Enhanced welcome message
+            st.markdown("""
+            <div style="text-align: center; padding: 2.5rem 1rem; color: #495057;">
+                <div style="font-size: 4rem; margin-bottom: 1.5rem; 
+                           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+                           background-clip: text;">🤖✈️</div>
+                <h4 style="color: #333; margin-bottom: 1.5rem; font-weight: 600;">
+                    Hey there, fellow traveler! 👋
+                </h4>
+                <p style="margin-bottom: 1.5rem; font-size: 1.05rem; color: #6c757d;">
+                    I'm your AI travel buddy, and I'm super excited to help make your trip amazing!
+                </p>
+                <div style="background: white; padding: 1.5rem; border-radius: 15px; 
+                           margin: 1.5rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                    <p style="margin-bottom: 1rem; font-weight: 600; color: #495057;">💡 Try asking me:</p>
+                    <div style="text-align: left; max-width: 280px; margin: 0 auto;">
+                        <p style="margin: 0.7rem 0; color: #6c757d;">
+                            <strong>🍽️ "Where should I eat in [area]?"</strong>
+                        </p>
+                        <p style="margin: 0.7rem 0; color: #6c757d;">
+                            <strong>🌟 "What's a hidden gem to visit?"</strong>
+                        </p>
+                        <p style="margin: 0.7rem 0; color: #6c757d;">
+                            <strong>💰 "How can I save money on day 3?"</strong>
+                        </p>
+                        <p style="margin: 0.7rem 0; color: #6c757d;">
+                            <strong>🎒 "What should I pack for the weather?"</strong>
+                        </p>
+                    </div>
+                </div>
+                <p style="font-style: italic; color: #888; font-size: 0.9rem;">
+                    Just type your question below and let's chat! 💬
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
         
-        # Enhanced chat input
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+        # Enhanced chat input styling
+        st.markdown("""
+        <style>
+        .stChatInput > div > div > div > div {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            border-radius: 30px !important;
+            border: none !important;
+            padding: 3px !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+        }
+        .stChatInput > div > div > div > div > div {
+            background: white !important;
+            border-radius: 27px !important;
+            border: none !important;
+        }
+        .stChatInput input {
+            border: none !important;
+            border-radius: 27px !important;
+            padding: 15px 25px !important;
+            font-size: 16px !important;
+            background: white !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        }
+        .stChatInput input::placeholder {
+            color: #adb5bd !important;
+            font-style: italic !important;
+            font-size: 15px !important;
+        }
+        .stChatInput input:focus {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # Enhanced chat input with dynamic placeholder
         trip_destination = st.session_state.state['preferences'].get('destination', 'your destination')
         user_input = st.chat_input(
-            f"Ask about {trip_destination}... (restaurants, activities, tips, etc.)"
+            f"Ask me about {trip_destination}... (e.g., 'Best rooftop bars?', 'Rainy day backup plans?', 'Local breakfast spots?')"
         )
         
-        # Compact quick question buttons
+        # Enhanced quick suggestion buttons with better styling
         st.markdown("**💡 Quick Questions:**")
-        col_q1, col_q2 = st.columns(2)
-        with col_q1:
-            if st.button("🍽️ Local eats", use_container_width=True, key="quick_restaurant"):
-                user_input = f"What are the best authentic local restaurants in {trip_destination} that aren't tourist traps?"
-            if st.button("💎 Hidden gems", use_container_width=True, key="quick_gems"):
-                user_input = f"What are some hidden gems in {trip_destination} that most tourists don't know about?"
         
-        with col_q2:
-            if st.button("💰 Save money", use_container_width=True, key="quick_budget"):
-                user_input = f"How can I save money during my {trip_destination} trip?"
-            if st.button("⏰ Best timing", use_container_width=True, key="quick_timing"):
-                user_input = f"What's the best time to visit attractions in {trip_destination}?"
+        # CSS for better button styling
+        st.markdown("""
+        <style>
+        .quick-question-btn {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            padding: 8px 12px;
+            margin: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .quick-question-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        col_quick1, col_quick2 = st.columns(2)
+        with col_quick1:
+            if st.button("🍽️ Best local eats", use_container_width=True, key="quick_restaurant"):
+                user_input = f"What are the best authentic restaurants in {trip_destination} that locals actually go to? I want the real experience, not tourist traps!"
+            if st.button("💎 Hidden gems", use_container_width=True, key="quick_gems"):
+                user_input = f"What are some amazing hidden gems or off-the-beaten-path places in {trip_destination} that most tourists miss?"
+        
+        with col_quick2:
+            if st.button("💰 Money-saving tips", use_container_width=True, key="quick_budget"):
+                user_input = f"How can I save money during my {trip_destination} trip without missing out on the good stuff?"
+            if st.button("⏰ Perfect timing", use_container_width=True, key="quick_timing"):
+                user_input = f"What's the best time of day to visit the main attractions in {trip_destination}? Any insider timing tips?"
         
         # Process chat input
         if user_input:
             st.session_state.state["user_question"] = user_input
             
-            with st.spinner("🤔 Thinking..."):
+            # Enhanced loading message
+            with st.spinner("🤔 Let me think about that for your trip..."):
                 result = chat_agent.chat_node(st.session_state.state)
                 st.session_state.state.update(result)
             
             st.rerun()
-
     # ========== ENHANCED CHAT INTERFACE END ==========
 
 # ========== ENHANCED EMPTY STATE START - LINE 465 ==========
