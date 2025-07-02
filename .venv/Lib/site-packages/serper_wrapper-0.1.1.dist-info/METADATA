@@ -1,0 +1,206 @@
+Metadata-Version: 2.4
+Name: serper-wrapper
+Version: 0.1.1
+Summary: Python package for calling Serper API with support for disk and MongoDB caching
+Home-page: https://github.com/yourusername/serper-wrapper
+Author: Serper Wrapper
+Author-email: your.email@example.com
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+Requires-Dist: requests>=2.25.0
+Requires-Dist: pymongo>=3.11.0
+Requires-Dist: prometheus_client>=0.12.0
+Provides-Extra: mongo
+Requires-Dist: pymongo>=3.11.0; extra == "mongo"
+Provides-Extra: metrics
+Requires-Dist: prometheus_client>=0.12.0; extra == "metrics"
+Provides-Extra: all
+Requires-Dist: pymongo>=3.11.0; extra == "all"
+Requires-Dist: prometheus_client>=0.12.0; extra == "all"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# Serper Wrapper
+
+一个用于调用Serper API的Python包，支持磁盘和MongoDB缓存功能。
+
+## 功能特点
+
+- 提供简单易用的接口调用Serper API
+- 支持磁盘缓存和MongoDB缓存
+- 可配置缓存过期时间
+- 磁盘缓存支持最大缓存大小限制和自动清理旧缓存
+- 支持自定义搜索参数（国家、语言、时间范围等）
+- 支持Python 3.7及以上版本
+- 集成Prometheus指标监控，支持PushGateway推送
+- 内置MongoDB支持，优化的连接池管理
+
+## 安装
+
+```bash
+pip install serper-wrapper
+```
+
+## 基本使用
+
+```python
+from serper_wrapper import SerperClient
+
+# 创建客户端实例
+client = SerperClient(
+    api_key="your_serper_api_key",  # 替换为你的Serper API密钥
+    cache_type="disk",  # 可选: "disk", "mongo", "none"
+    cache_expiration=3600,  # 缓存过期时间（秒）
+    max_cache_size_mb=4096  # 最大缓存大小（MB）
+)
+
+# 简单搜索（需要提供source参数标识调用来源）
+results = client.search("apple inc", source="my_app")
+
+# 带自定义参数的搜索
+results = client.search(
+    query="apple inc",
+    source="product_page",  # 调用来源标识
+    country="jp",  # 日本
+    language="ja",  # 日语
+    time_period="1w",  # 过去一周
+    num_results=20,
+    page=1,
+    use_cache=True  # 使用缓存
+)
+
+# 清空缓存
+client.clear_cache()
+```
+
+## 使用MongoDB缓存
+
+```python
+from serper_wrapper import SerperClient
+
+# 创建使用MongoDB缓存的客户端实例
+client = SerperClient(
+    api_key="your_serper_api_key",
+    cache_type="mongo",
+    cache_expiration=3600,
+    mongo_uri="mongodb://localhost:27017",
+    mongo_db="serper_cache",
+    mongo_collection="cache"
+)
+
+# 使用方式与磁盘缓存相同
+results = client.search("apple inc", source="my_app")
+```
+
+### MongoDB高级配置
+
+```python
+from serper_wrapper.cache.mongo_cache import MongoCache
+
+# 创建带有自定义连接池配置的MongoDB缓存
+mongo_cache = MongoCache(
+    mongo_uri="mongodb://localhost:27017",
+    db_name="serper_cache",
+    collection_name="cache",
+    expiration_time=7200,  # 2小时过期
+    connect_on_init=True,  # 初始化时建立连接
+    max_pool_size=50,      # 最大连接数
+    min_pool_size=5        # 最小连接数
+)
+
+# 使用自定义缓存创建客户端
+client = SerperClient(
+    api_key="your_serper_api_key",
+    cache_type="none"  # 使用none，因为我们会手动设置缓存
+)
+client.cache = mongo_cache
+
+# 现在可以使用带有优化连接池的客户端
+results = client.search("apple inc", source="my_app")
+
+# 使用完毕后关闭连接
+mongo_cache.close()
+```
+
+## 自定义搜索
+
+```python
+from serper_wrapper import SerperClient
+
+client = SerperClient(api_key="your_serper_api_key")
+
+# 完全自定义搜索参数
+custom_payload = {
+    "q": "apple inc",
+    "gl": "us",
+    "hl": "en",
+    "num": 30,
+    "tbs": "qdr:d"  # 过去24小时
+}
+
+# 必须提供source参数表示调用来源
+results = client.custom_search(custom_payload, source="custom_search_page")
+```
+
+## 启用Prometheus指标监控
+
+```python
+from serper_wrapper import SerperClient
+
+# 创建带指标监控的客户端实例
+client = SerperClient(
+    api_key="your_serper_api_key",
+    metrics_gateway="http://localhost:9091",  # Prometheus PushGateway地址
+    metrics_job="serper_api_client"  # 作业名称
+)
+
+# 每次调用search或custom_search时，都会自动收集并推送指标
+results = client.search("apple inc", source="metrics_example")
+```
+
+### 可用的Prometheus指标
+
+- `serper_search_total`: 搜索请求计数器，带标签：
+  - `source`: 调用来源
+  - `cache_hit`: 是否命中缓存
+  - `country`: 搜索国家
+  - `language`: 搜索语言
+- `serper_search_duration_seconds`: 搜索耗时直方图，带标签：
+  - `source`: 调用来源
+  - `cache_hit`: 是否命中缓存
+- `serper_search_errors_total`: 搜索错误计数器，带标签：
+  - `source`: 调用来源
+  - `error_type`: 错误类型
+
+## Serper API参数说明
+
+- `q`: 搜索查询内容
+- `gl`: 搜索国家，例如"us"、"jp"、"cn"等
+- `hl`: 搜索语言，例如"en"、"zh-cn"、"ja"等
+- `tbs`: 搜索时间范围
+  - `qdr:h`: 过去1小时
+  - `qdr:d`: 过去24小时
+  - `qdr:w`: 过去7天
+  - `qdr:m`: 过去一个月
+  - `qdr:y`: 过去一年
+- `num`: 搜索结果数量，最大为100
+- `page`: 搜索结果页码
+
+## 许可证
+
+MIT 

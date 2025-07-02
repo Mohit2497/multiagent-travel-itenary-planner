@@ -1,0 +1,34 @@
+# Environment
+.env
+travel_env/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Data
+*.csv
+*.json
+!sample_data.json
+!destinations.json
+
+# Generated files
+*.pdf
+output/
+temp/
