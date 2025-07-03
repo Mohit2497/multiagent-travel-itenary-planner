@@ -533,10 +533,13 @@ if st.session_state.state.get("itinerary"):
             # Complete Chat Interface Replacement
     # Replace the entire chat section in your travel_agent.py (around line 425)
 
-    # ========== COMPACT CHAT INTERFACE ==========
+    # FIXED CHAT INTERFACE - No more stray </div> tags!
+    # Replace your chat section with this cleaned-up version
+
+    # ========== CLEAN CHAT INTERFACE ==========
     with col_chat:
-        # Smaller, more compact chat header
-        st.markdown("""
+        # Chat header - properly closed
+        st.markdown(f"""
         <div style="
             background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%); 
             padding: 10px 15px; 
@@ -548,148 +551,178 @@ if st.session_state.state.get("itinerary"):
         ">
             <h4 style="margin: 0; font-size: 16px; font-weight: 600;">💬 AI Travel Buddy</h4>
             <p style="margin: 3px 0 0 0; font-size: 12px; opacity: 0.9;">
-                Ask about your """ + st.session_state.state['preferences'].get('destination', 'trip') + """
+                Ask about your {st.session_state.state['preferences'].get('destination', 'trip')}
             </p>
         </div>
         """, unsafe_allow_html=True)
         
-        # Much smaller chat container - key fix here!
+        # Determine container height
         if st.session_state.state["chat_history"]:
-            container_height = "300px"  # Reduced from 400px
+            container_height = "300px"
         else:
-            container_height = "150px"  # Much smaller empty state - was 250px
+            container_height = "150px"
         
-        # Compact chat messages container
-        st.markdown(f"""
-        <div style="
-            background: #f8f9fa; 
-            border: 1px solid #357ABD;
-            border-top: none;
-            height: {container_height}; 
-            overflow-y: auto; 
-            padding: 10px;
-            border-radius: 0 0 8px 8px;
-            margin-bottom: 10px;
-        " id="chat-messages">
-        """, unsafe_allow_html=True)
-        
-        # Display chat messages or compact welcome message
-        if st.session_state.state["chat_history"]:
-            # Display existing chat messages (same as before)
-            for i, chat in enumerate(st.session_state.state["chat_history"]):
-                # User message (right side, blue)
-                st.markdown(f"""
-                <div style="margin-bottom: 12px; text-align: right;">
-                    <div style="
-                        display: inline-block;
-                        background: #007bff;
-                        color: white;
-                        padding: 8px 12px;
-                        border-radius: 15px 15px 3px 15px;
-                        max-width: 85%;
-                        font-size: 13px;
-                        line-height: 1.4;
-                        box-shadow: 0 1px 4px rgba(0,123,255,0.2);
-                        word-wrap: break-word;
-                        text-align: left;
-                    ">
-                        {chat['question']}
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                # AI response (left side, green)
-                st.markdown(f"""
-                <div style="margin-bottom: 12px; text-align: left;">
-                    <div style="
-                        display: inline-block;
-                        background: #28a745;
-                        color: white;
-                        padding: 8px 12px;
-                        border-radius: 15px 15px 15px 3px;
-                        max-width: 85%;
-                        font-size: 13px;
-                        line-height: 1.4;
-                        box-shadow: 0 1px 4px rgba(40,167,69,0.2);
-                        word-wrap: break-word;
-                    ">
-                        <div style="margin-bottom: 3px; font-size: 11px; opacity: 0.8;">
-                            🤖 AI Buddy
-                        </div>
-                        {chat['response']}
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-        else:
-            # MUCH more compact welcome message
-            st.markdown("""
-            <div style="text-align: center; padding: 15px 10px;">
-                <div style="font-size: 32px; margin-bottom: 8px;">🤖</div>
-                <h5 style="color: #495057; margin-bottom: 8px; font-size: 14px;">
-                    Ready to help! 👋
-                </h5>
-                <p style="color: #6c757d; font-size: 12px; margin-bottom: 10px; line-height: 1.3;">
-                    Ask me about restaurants, activities, or travel tips!
-                </p>
-                <div style="
-                    background: white; 
-                    padding: 8px; 
-                    border-radius: 6px; 
-                    border: 1px solid #dee2e6;
-                    font-size: 11px;
-                    color: #6c757d;
-                ">
-                    💡 Try: "Best local restaurants?" or "Hidden gems to visit?"
-                </div>
-            </div>
+        # Chat container - using st.container() instead of raw HTML
+        chat_container = st.container()
+        with chat_container:
+            # Create a styled container using Streamlit's native approach
+            st.markdown(f"""
+            <div style="
+                background: #f8f9fa; 
+                border: 1px solid #357ABD;
+                border-top: none;
+                height: {container_height}; 
+                overflow-y: auto; 
+                padding: 10px;
+                border-radius: 0 0 8px 8px;
+                margin-bottom: 10px;
+            ">
             """, unsafe_allow_html=True)
+            
+            # Display messages or welcome
+            if st.session_state.state["chat_history"]:
+                # Show chat history
+                for i, chat in enumerate(st.session_state.state["chat_history"]):
+                    # User message
+                    st.markdown(f"""
+                    <div style="margin-bottom: 12px; text-align: right;">
+                        <div style="
+                            display: inline-block;
+                            background: #007bff;
+                            color: white;
+                            padding: 8px 12px;
+                            border-radius: 15px 15px 3px 15px;
+                            max-width: 85%;
+                            font-size: 13px;
+                            line-height: 1.4;
+                            word-wrap: break-word;
+                            text-align: left;
+                        ">
+                            {chat['question']}
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # AI response
+                    st.markdown(f"""
+                    <div style="margin-bottom: 12px; text-align: left;">
+                        <div style="
+                            display: inline-block;
+                            background: #28a745;
+                            color: white;
+                            padding: 8px 12px;
+                            border-radius: 15px 15px 15px 3px;
+                            max-width: 85%;
+                            font-size: 13px;
+                            line-height: 1.4;
+                            word-wrap: break-word;
+                        ">
+                            <div style="margin-bottom: 3px; font-size: 11px; opacity: 0.8;">
+                                🤖 AI Buddy
+                            </div>
+                            {chat['response']}
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+            else:
+                # Compact welcome message
+                st.markdown("""
+                <div style="text-align: center; padding: 15px 10px;">
+                    <div style="font-size: 32px; margin-bottom: 8px;">🤖</div>
+                    <h5 style="color: #495057; margin-bottom: 8px; font-size: 14px;">Ready to help! 👋</h5>
+                    <p style="color: #6c757d; font-size: 12px; margin-bottom: 10px; line-height: 1.3;">
+                        Ask me about restaurants, activities, or travel tips!
+                    </p>
+                    <div style="
+                        background: white; 
+                        padding: 8px; 
+                        border-radius: 6px; 
+                        border: 1px solid #dee2e6;
+                        font-size: 11px;
+                        color: #6c757d;
+                    ">
+                        💡 Try: "Best local restaurants?" or "Hidden gems to visit?"
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            # IMPORTANT: Close the container div properly
+            st.markdown("</div>", unsafe_allow_html=True)
         
-        st.markdown("</div>", unsafe_allow_html=True)
+        # Chat input - outside the container
+        user_input = st.chat_input("Ask about your trip...", key="travel_chat_input")
         
-        # Compact chat input
-        user_input = st.chat_input(
-            f"Ask about your trip...",
-            key="travel_chat_input"
-        )
-        
-        # Smaller quick question buttons
-        st.markdown("**💡 Quick:**")
+        # Quick question buttons
+        st.markdown("**💡 Quick Questions:**")
         col_q1, col_q2 = st.columns(2)
+        
         with col_q1:
-            if st.button("🍽️ Food", use_container_width=True, key="q_food"):
+            if st.button("🍽️ Food", use_container_width=True, key="q_food", help="Best local restaurants"):
                 user_input = f"What are the best local restaurants in {st.session_state.state['preferences'].get('destination', 'the area')}?"
-            if st.button("💎 Gems", use_container_width=True, key="q_gems"):
-                user_input = f"Hidden gems in {st.session_state.state['preferences'].get('destination', 'the area')}?"
+            if st.button("💎 Gems", use_container_width=True, key="q_gems", help="Hidden attractions"):
+                user_input = f"What are some hidden gems in {st.session_state.state['preferences'].get('destination', 'the area')}?"
         
         with col_q2:
-            if st.button("💰 Tips", use_container_width=True, key="q_money"):
-                user_input = f"Money-saving tips for {st.session_state.state['preferences'].get('destination', 'my trip')}?"
-            if st.button("⏰ Time", use_container_width=True, key="q_timing"):
+            if st.button("💰 Tips", use_container_width=True, key="q_money", help="Save money"):
+                user_input = f"How can I save money in {st.session_state.state['preferences'].get('destination', 'my destination')}?"
+            if st.button("⏰ Time", use_container_width=True, key="q_timing", help="Best visit times"):
                 user_input = f"Best times to visit attractions in {st.session_state.state['preferences'].get('destination', 'the area')}?"
         
-        # Process chat input (same as before)
+        # Process user input
         if user_input:
             st.session_state.state["user_question"] = user_input
             
             with st.spinner("🤔 Thinking..."):
                 try:
+                    # Import and call chat agent
                     from chat_agent import chat_node
                     result = chat_node(st.session_state.state)
                     st.session_state.state.update(result)
-                    st.success("✅ Response ready!")
+                    st.success("✅ Got it!")
+                    
                 except Exception as e:
-                    st.error(f"Error: {str(e)}")
+                    st.error(f"Oops: {str(e)}")
+                    # Add error to chat history
                     error_response = "Sorry, I had a small hiccup. Try asking again! 😊"
                     chat_entry = {"question": user_input, "response": error_response}
+                    
                     if "chat_history" not in st.session_state.state:
                         st.session_state.state["chat_history"] = []
                     st.session_state.state["chat_history"].append(chat_entry)
             
+            # Refresh to show new message
             st.rerun()
 
-    # ========== COMPACT CHAT INTERFACE END ==========
+    # Add this CSS to fix any remaining styling issues
+    st.markdown("""
+    <style>
+    /* Hide any stray HTML elements */
+    .element-container:has([data-testid="stMarkdownContainer"]) {
+        overflow: hidden;
+    }
 
-    # ========== FIXED CHAT INTERFACE END ==========
+    /* Ensure proper button styling */
+    .stButton > button {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        height: 32px !important;
+        border-radius: 6px !important;
+    }
+
+    /* Clean up chat input area */
+    .stChatInput {
+        margin: 8px 0 !important;
+    }
+
+    /* Remove any unwanted borders or outlines */
+    div[data-testid="stVerticalBlock"] > div {
+        border: none !important;
+        outline: none !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # ========== CLEAN CHAT INTERFACE END ==========
 
 # ========== ENHANCED EMPTY STATE START - LINE 465 ==========
 else:
