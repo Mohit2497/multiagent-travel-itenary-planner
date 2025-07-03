@@ -667,7 +667,32 @@ if st.session_state.state.get("itinerary"):
             if st.button("💰 Budget", use_container_width=True, key="q_money"):
                 user_input = f"How to save money in {trip_destination}?"
             if st.button("⏰ Timing", use_container_width=True, key="q_timing"):
-                user_input = f"Best times to visit attractions in {trip_destination}?"        
+                user_input = f"Best times to visit attractions in {trip_destination}?"
+
+        if st.session_state.state.get("chat_history") and len(st.session_state.state["chat_history"]) > 0:
+                st.markdown("---")  # Visual separator line
+                
+                # Create centered button layout
+                col_left, col_center, col_right = st.columns([1, 2, 1])
+                
+                with col_center:
+                    if st.button(
+                        "🗑️ Clear Chat History", 
+                        use_container_width=True, 
+                        key="clear_chat_button",
+                        type="secondary",
+                        help="Clear all chat messages"
+                    ):
+                        # Clear all chat data
+                        st.session_state.state["chat_history"] = []
+                        st.session_state.state["user_question"] = ""
+                        st.session_state.state["chat_response"] = ""
+                        
+                        # Show success message
+                        st.success("✅ Chat history cleared!")
+                        
+                        # Refresh the page to update UI
+                        st.rerun()       
         
         # ========== CRITICAL CHAT PROCESSING FIX ==========
         if user_input:
