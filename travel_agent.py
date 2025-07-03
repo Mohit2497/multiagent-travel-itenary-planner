@@ -688,7 +688,7 @@ if st.session_state.state.get("itinerary"):
                         sys.path.append(current_dir)
                     
                     # Import chat_agent directly
-                    import chat_agent
+                    from agents import chat_agent
                     
                     # Call the chat function directly
                     result = chat_agent.chat_node(st.session_state.state)
