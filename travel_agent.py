@@ -833,10 +833,8 @@ else:
 # ========== ENHANCED EMPTY STATE END ==========
 
 # NEW: Footer with additional information
-st.markdown("---")
 st.markdown("""
-<div style="text-align: center; color: #666; padding: 20px;">
-    <p>🤖 Powered by AI • ✈️ Travel Smart • 🌍 Explore More</p>
-    <p><small>Your AI Travel Assistant - Making trip planning effortless and enjoyable!</small></p>
+<div style="text-align: center; color: #999; font-size: 11px; padding: 5px 0; margin-top: 15px;">
+    🤖 AI Travel Assistant
 </div>
 """, unsafe_allow_html=True)
