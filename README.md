@@ -26,7 +26,7 @@ The AI Travel Itinerary Planner uses a LangGraph workflow to manage a set of age
 ## Directory Structure
 
 ```
-MultiAgents-with-Langgraph-TravelItineraryPlanner/
+MultiAgents-with-Langgraph-Travel-Itinerary-Planner/
 │
 ├── agents/
 │   ├── __init__.py
@@ -69,7 +69,7 @@ MultiAgents-with-Langgraph-TravelItineraryPlanner/
 
 ```bash
 git clone https://github.com/Mohit2497/multiagent-travel-itenary-planner.git
-cd MultiAgents-with-Langgraph-TravelItineraryPlanner
+cd MultiAgents-with-Langgraph-Travel-Itinerary-Planner
 ```
 
 2. Install dependencies:
