@@ -537,192 +537,208 @@ if st.session_state.state.get("itinerary"):
     # Replace your chat section with this cleaned-up version
 
     # ========== CLEAN CHAT INTERFACE ==========
+
+    # COMPLETELY NEW CHAT INTERFACE - Pure Streamlit Components
+    # Replace your entire chat section with this HTML-free version
+
+    # ========== PURE STREAMLIT CHAT INTERFACE ==========
     with col_chat:
-        # Chat header - properly closed
-        st.markdown(f"""
-        <div style="
-            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%); 
-            padding: 10px 15px; 
-            border-radius: 8px 8px 0 0; 
-            text-align: center; 
-            color: white; 
-            margin-bottom: 0;
-            border: 1px solid #357ABD;
-        ">
-            <h4 style="margin: 0; font-size: 16px; font-weight: 600;">💬 AI Travel Buddy</h4>
-            <p style="margin: 3px 0 0 0; font-size: 12px; opacity: 0.9;">
-                Ask about your {st.session_state.state['preferences'].get('destination', 'trip')}
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Determine container height
-        if st.session_state.state["chat_history"]:
-            container_height = "300px"
-        else:
-            container_height = "150px"
-        
-        # Chat container - using st.container() instead of raw HTML
-        chat_container = st.container()
-        with chat_container:
-            # Create a styled container using Streamlit's native approach
-            st.markdown(f"""
-            <div style="
-                background: #f8f9fa; 
-                border: 1px solid #357ABD;
-                border-top: none;
-                height: {container_height}; 
-                overflow-y: auto; 
-                padding: 10px;
-                border-radius: 0 0 8px 8px;
-                margin-bottom: 10px;
-            ">
-            """, unsafe_allow_html=True)
+        # 🔥 HIGHLIGHT: Using Streamlit's native container instead of HTML
+        with st.container():
+            # 🔥 HIGHLIGHT: Clean header using Streamlit components
+            st.markdown("### 💬 AI Travel Buddy")
+            destination = st.session_state.state['preferences'].get('destination', 'your destination')
+            st.caption(f"Ask me anything about your trip to {destination}!")
             
-            # Display messages or welcome
-            if st.session_state.state["chat_history"]:
-                # Show chat history
-                for i, chat in enumerate(st.session_state.state["chat_history"]):
-                    # User message
-                    st.markdown(f"""
-                    <div style="margin-bottom: 12px; text-align: right;">
-                        <div style="
-                            display: inline-block;
-                            background: #007bff;
-                            color: white;
-                            padding: 8px 12px;
-                            border-radius: 15px 15px 3px 15px;
-                            max-width: 85%;
-                            font-size: 13px;
-                            line-height: 1.4;
-                            word-wrap: break-word;
-                            text-align: left;
-                        ">
-                            {chat['question']}
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
+            # 🔥 HIGHLIGHT: Using Streamlit's native chat message components
+            chat_container = st.container()
+            with chat_container:
+                # Set a reasonable height for the chat area
+                if st.session_state.state["chat_history"]:
+                    # Show chat messages using Streamlit's chat components
+                    for i, chat in enumerate(st.session_state.state["chat_history"]):
+                        # 🔥 HIGHLIGHT: User message with avatar
+                        with st.chat_message("user", avatar="🧑‍💼"):
+                            st.write(chat["question"])
+                        
+                        # 🔥 HIGHLIGHT: AI message with avatar
+                        with st.chat_message("assistant", avatar="🤖"):
+                            st.write(chat["response"])
+                else:
+                    # 🔥 HIGHLIGHT: Welcome message using Streamlit info box
+                    st.info("""
+                    👋 **Welcome! I'm your AI Travel Buddy**
                     
-                    # AI response
-                    st.markdown(f"""
-                    <div style="margin-bottom: 12px; text-align: left;">
-                        <div style="
-                            display: inline-block;
-                            background: #28a745;
-                            color: white;
-                            padding: 8px 12px;
-                            border-radius: 15px 15px 15px 3px;
-                            max-width: 85%;
-                            font-size: 13px;
-                            line-height: 1.4;
-                            word-wrap: break-word;
-                        ">
-                            <div style="margin-bottom: 3px; font-size: 11px; opacity: 0.8;">
-                                🤖 AI Buddy
-                            </div>
-                            {chat['response']}
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-            else:
-                # Compact welcome message
-                st.markdown("""
-                <div style="text-align: center; padding: 15px 10px;">
-                    <div style="font-size: 32px; margin-bottom: 8px;">🤖</div>
-                    <h5 style="color: #495057; margin-bottom: 8px; font-size: 14px;">Ready to help! 👋</h5>
-                    <p style="color: #6c757d; font-size: 12px; margin-bottom: 10px; line-height: 1.3;">
-                        Ask me about restaurants, activities, or travel tips!
-                    </p>
-                    <div style="
-                        background: white; 
-                        padding: 8px; 
-                        border-radius: 6px; 
-                        border: 1px solid #dee2e6;
-                        font-size: 11px;
-                        color: #6c757d;
-                    ">
-                        💡 Try: "Best local restaurants?" or "Hidden gems to visit?"
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            # IMPORTANT: Close the container div properly
-            st.markdown("</div>", unsafe_allow_html=True)
+                    I'm here to help make your trip amazing! Ask me about:
+                    - 🍽️ Best local restaurants and food
+                    - 🏛️ Must-see attractions and hidden gems  
+                    - 💰 Money-saving tips and budget advice
+                    - 🚇 Transportation and getting around
+                    - 🎯 Activities perfect for your group
+                    
+                    Just type your question below or use the quick buttons! ⬇️
+                    """)
         
-        # Chat input - outside the container
-        user_input = st.chat_input("Ask about your trip...", key="travel_chat_input")
+        # 🔥 HIGHLIGHT: Streamlit's native chat input (no HTML needed)
+        user_input = st.chat_input(
+            placeholder=f"Ask me about {destination}... (e.g., 'Best rooftop restaurants?')",
+            key="travel_chat_input"
+        )
         
-        # Quick question buttons
-        st.markdown("**💡 Quick Questions:**")
-        col_q1, col_q2 = st.columns(2)
+        # 🔥 HIGHLIGHT: Quick action buttons in clean grid
+        st.subheader("💡 Quick Questions")
         
-        with col_q1:
-            if st.button("🍽️ Food", use_container_width=True, key="q_food", help="Best local restaurants"):
-                user_input = f"What are the best local restaurants in {st.session_state.state['preferences'].get('destination', 'the area')}?"
-            if st.button("💎 Gems", use_container_width=True, key="q_gems", help="Hidden attractions"):
-                user_input = f"What are some hidden gems in {st.session_state.state['preferences'].get('destination', 'the area')}?"
+        # Create 2x2 button grid
+        col1, col2 = st.columns(2)
         
-        with col_q2:
-            if st.button("💰 Tips", use_container_width=True, key="q_money", help="Save money"):
-                user_input = f"How can I save money in {st.session_state.state['preferences'].get('destination', 'my destination')}?"
-            if st.button("⏰ Time", use_container_width=True, key="q_timing", help="Best visit times"):
-                user_input = f"Best times to visit attractions in {st.session_state.state['preferences'].get('destination', 'the area')}?"
+        with col1:
+            # 🔥 HIGHLIGHT: Enhanced buttons with better labels and help text
+            if st.button(
+                "🍽️ **Local Food**", 
+                use_container_width=True, 
+                key="btn_food",
+                help="Get recommendations for authentic local restaurants"
+            ):
+                user_input = f"What are the best authentic local restaurants in {destination} that locals actually go to? I want the real experience!"
+                
+            if st.button(
+                "💎 **Hidden Gems**", 
+                use_container_width=True, 
+                key="btn_gems",
+                help="Discover off-the-beaten-path attractions"
+            ):
+                user_input = f"What are some amazing hidden gems or secret spots in {destination} that most tourists don't know about?"
         
-        # Process user input
+        with col2:
+            if st.button(
+                "💰 **Save Money**", 
+                use_container_width=True, 
+                key="btn_budget",
+                help="Tips to reduce costs without missing out"
+            ):
+                user_input = f"How can I save money during my trip to {destination} without missing out on the best experiences?"
+                
+            if st.button(
+                "⏰ **Perfect Timing**", 
+                use_container_width=True, 
+                key="btn_timing",
+                help="Best times to visit attractions"
+            ):
+                user_input = f"What are the best times of day to visit the main attractions in {destination} to avoid crowds and get the best experience?"
+        
+        # 🔥 HIGHLIGHT: Additional helpful buttons row
+        st.markdown("---")
+        col3, col4 = st.columns(2)
+        
+        with col3:
+            if st.button(
+                "🚇 **Transportation**", 
+                use_container_width=True, 
+                key="btn_transport",
+                help="Getting around efficiently"
+            ):
+                user_input = f"What's the best way to get around {destination}? Any transportation tips or apps I should know about?"
+        
+        with col4:
+            if st.button(
+                "🎯 **Custom Help**", 
+                use_container_width=True, 
+                key="btn_custom",
+                help="Get personalized advice"
+            ):
+                group_size = st.session_state.state['preferences'].get('num_people', '1')
+                trip_type = st.session_state.state['preferences'].get('holiday_type', 'trip')
+                user_input = f"I'm traveling with {group_size} people on a {trip_type} to {destination}. What specific advice do you have for our group?"
+        
+        # 🔥 HIGHLIGHT: Process user input with better error handling
         if user_input:
+            # Store the question
             st.session_state.state["user_question"] = user_input
             
-            with st.spinner("🤔 Thinking..."):
+            # 🔥 HIGHLIGHT: Enhanced loading with progress
+            with st.spinner("🤔 Let me think about that..."):
                 try:
                     # Import and call chat agent
                     from chat_agent import chat_node
                     result = chat_node(st.session_state.state)
                     st.session_state.state.update(result)
-                    st.success("✅ Got it!")
+                    
+                    # 🔥 HIGHLIGHT: Success feedback
+                    st.success("✅ I've got some great suggestions for you!")
+                    st.balloons()  # Fun animation
                     
                 except Exception as e:
-                    st.error(f"Oops: {str(e)}")
-                    # Add error to chat history
-                    error_response = "Sorry, I had a small hiccup. Try asking again! 😊"
-                    chat_entry = {"question": user_input, "response": error_response}
+                    # 🔥 HIGHLIGHT: Better error handling
+                    st.error("🚨 Oops! I had a small technical hiccup.")
+                    st.warning("💡 **Try this:** Refresh the page or ask your question in a different way.")
+                    
+                    # Add friendly error to chat history
+                    error_response = f"Sorry about that technical glitch! I'm still excited to help with your {destination} trip. Could you try asking your question again? I promise I'll do better! 😊"
+                    
+                    chat_entry = {
+                        "question": user_input,
+                        "response": error_response
+                    }
                     
                     if "chat_history" not in st.session_state.state:
                         st.session_state.state["chat_history"] = []
                     st.session_state.state["chat_history"].append(chat_entry)
             
-            # Refresh to show new message
+            # Refresh to show the new message
             st.rerun()
 
-    # Add this CSS to fix any remaining styling issues
+    # 🔥 HIGHLIGHT: Enhanced styling for better integration
     st.markdown("""
     <style>
-    /* Hide any stray HTML elements */
-    .element-container:has([data-testid="stMarkdownContainer"]) {
-        overflow: hidden;
+    /* Make chat messages more readable */
+    .stChatMessage {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 5px 0;
     }
 
-    /* Ensure proper button styling */
+    /* Style the quick action buttons */
     .stButton > button {
-        padding: 6px 12px !important;
-        font-size: 12px !important;
-        height: 32px !important;
-        border-radius: 6px !important;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    /* Clean up chat input area */
-    .stChatInput {
-        margin: 8px 0 !important;
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        background: linear-gradient(90deg, #5a6fd8 0%, #6a4190 100%);
     }
 
-    /* Remove any unwanted borders or outlines */
-    div[data-testid="stVerticalBlock"] > div {
-        border: none !important;
-        outline: none !important;
+    /* Style the chat input */
+    .stChatInput > div {
+        border-radius: 20px;
+        border: 2px solid #667eea;
+    }
+
+    /* Make the info box more appealing */
+    .stAlert > div {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 12px;
+        border: none;
+    }
+
+    /* Clean section headers */
+    .stSubheader {
+        color: #667eea;
+        font-weight: 600;
     }
     </style>
     """, unsafe_allow_html=True)
 
-    # ========== CLEAN CHAT INTERFACE END ==========
+    # ========== PURE STREAMLIT CHAT INTERFACE END ==========
 
 # ========== ENHANCED EMPTY STATE START - LINE 465 ==========
 else:
