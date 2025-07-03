@@ -275,4 +275,4 @@ This project is open-source. See the LICENSE file for details (if applicable).
 
 ## Contact
 
-For questions or support, reach out to me on LinkedIn: [https://www.linkedin.com/in/deshpandem/] or open an issue in the repository.
+For questions or support, reach out to me on [LinkedIn](https://www.linkedin.com/in/deshpandem/) or open an issue in the repository.
