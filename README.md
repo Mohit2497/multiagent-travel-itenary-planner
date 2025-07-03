@@ -97,7 +97,6 @@ SERPER_API_KEY=your_serper_api_key_here
 
 ```env
 GROQ_API_KEY=your_groq_api_key_here
-LLM_PROVIDER=groq
 ```
 
 **Benefits of Groq:**
