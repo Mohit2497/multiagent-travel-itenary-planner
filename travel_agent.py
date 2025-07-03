@@ -254,6 +254,7 @@ with st.form("travel_form"):
             "Destination", 
             placeholder="e.g., Paris, Tokyo, New York",
             help="Enter the city or country you want to visit"
+            key="form_destination"
         )
         
         # NEW: Form validation
@@ -264,7 +265,8 @@ with st.form("travel_form"):
             "Month of Travel", 
             options=["January", "February", "March", "April", "May", "June", 
                     "July", "August", "September", "October", "November", "December"],
-            help="Choose your travel month for weather-appropriate suggestions"
+            help="Choose your travel month for weather-appropriate suggestions",
+            key="form_month"
         )
         
         duration = st.number_input(
@@ -272,14 +274,16 @@ with st.form("travel_form"):
             min_value=1, 
             max_value=30, 
             value=st.session_state.user_defaults.get('duration', 7),
-            help="How many days will you be traveling?"
+            help="How many days will you be traveling?",
+            key="form_duration"
         )
         
         num_people = st.selectbox(
             "Number of People", 
             ["1", "2", "3", "4-6", "7-10", "10+"],
             index=st.session_state.user_defaults.get('num_people_idx', 1),
-            help="This helps customize recommendations for your group size"
+            help="This helps customize recommendations for your group size",
+            key="form_num_people"
         )
         
     with col2:
@@ -288,21 +292,24 @@ with st.form("travel_form"):
             "Holiday Type", 
             ["Any", "Party", "Skiing", "Backpacking", "Family", "Beach", "Festival", 
              "Adventure", "City Break", "Romantic", "Cruise"],
-            help="Choose the type of experience you're looking for"
+            help="Choose the type of experience you're looking for",
+            key="form_holiday_type"
         )
         
         budget_type = st.selectbox(
             "Budget Type", 
             ["Budget", "Mid-Range", "Luxury", "Backpacker", "Family"],
             index=st.session_state.user_defaults.get('budget_idx', 0),
-            help="This affects accommodation and activity recommendations"
+            help="This affects accommodation and activity recommendations",
+            key="form_budget_type"
         )
         
         comments = st.text_area(
             "Additional Comments", 
             placeholder="Any specific preferences? (e.g., vegetarian food, museums, nightlife, accessibility needs)",
             height=100,
-            help="The more specific you are, the better your recommendations will be!"
+            help="The more specific you are, the better your recommendations will be!",
+            key="form_comments"
         )
     
     # NEW: Enhanced submit button with better styling
