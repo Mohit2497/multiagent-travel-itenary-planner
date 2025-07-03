@@ -125,9 +125,32 @@ with st.sidebar:
     
     # Always show "Plan New Trip" button
     if st.button("🔄 Plan New Trip", use_container_width=True):
-        st.session_state.clear()
+        keys_to_keep = []
+        for key in list(st.session_state.keys()):
+            if key not in keys_to_keep:
+                del st.session_state[key]
+
+        # Reset relevant state variables
+        st.session_state.state = {
+            "preferences": {},
+            "itinerary": "",
+            "activity_suggestions": "",
+            "useful_links": [],
+            "weather_forecast": "",
+            "packing_list": "",
+            "food_culture_info": "",
+            "chat_history": [],
+            "user_question": "",
+            "chat_response": ""
+        }
+
+        st.session_state.user_defaults = {}
+
+        st.success("🎉 Ready for your next adventure!")
+        st.info("👇 Fill out the form below to start planning!")
+
         st.rerun()
-    
+
     # Check for trip data more safely
     has_trip_data = False
     trip_preferences = None
