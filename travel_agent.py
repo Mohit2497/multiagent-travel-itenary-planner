@@ -557,9 +557,9 @@ if st.session_state.state.get("itinerary"):
         
         # Chat container
         if st.session_state.state["chat_history"]:
-            container_height = "200px"
-        else:
             container_height = "100px"
+        else:
+            container_height = "80px"
         
         # Chat messages display
         st.markdown(f"""
