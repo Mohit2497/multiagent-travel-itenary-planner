@@ -21,7 +21,6 @@ The AI Travel Itinerary Planner uses a LangGraph workflow to manage a set of age
 * Responsive design with modern UI styling and gradient themes.
 * Form validation and enhanced error handling.
 * Progress tracking during itinerary generation.
-* Multiple LLM provider support (Groq, Ollama, OpenAI).
 
 ## Directory Structure
 
