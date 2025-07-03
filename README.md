@@ -7,7 +7,7 @@ Welcome to the **AI Travel Itinerary Planner**, a modular multi-agent system bui
 
 ## Overview
 
-The AI Travel Itinerary Planner uses a LangGraph workflow to manage a set of agents that collaboratively process user inputs (e.g., destination, month, duration) to produce a detailed itinerary, activity suggestions, weather forecasts, packing lists, food/culture recommendations, useful links, and a chat interface. The system supports multiple LLM providers including Groq (with `llama3-70b-8192` model), Ollama, and OpenAI for flexible deployment options.
+The AI Travel Itinerary Planner uses a LangGraph workflow to manage a set of agents that collaboratively process user inputs (e.g., destination, month, duration) to produce a detailed itinerary, activity suggestions, weather forecasts, packing lists, food/culture recommendations, useful links, and a chat interface. The system supports multiple LLM providers, including Groq (with `llama3-70b-8192` model), and local Ollama for flexible deployment options.
 
 ## Features
 
