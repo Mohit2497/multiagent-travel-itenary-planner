@@ -253,7 +253,7 @@ with st.form("travel_form"):
         destination = st.text_input(
             "Destination", 
             placeholder="e.g., Paris, Tokyo, New York",
-            help="Enter the city or country you want to visit"
+            help="Enter the city or country you want to visit",
             key="form_destination"
         )
         
