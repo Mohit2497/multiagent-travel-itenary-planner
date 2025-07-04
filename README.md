@@ -5,6 +5,8 @@ Welcome to the **AI Travel Itinerary Planner**, a modular multi-agent system bui
 * **Repository**: https://github.com/Mohit2497/multiagent-travel-itenary-planner
 * **Application Link**: [AI Travel Itinerary Planner](https://multiagent-travel-itinerary-planner.streamlit.app/)
 
+<img src="https://github.com/user-attachments/assets/f7d2c6b4-f5ee-4b61-b1d4-1e45299f134a" width="600" height="600">
+
 ## Overview
 
 The AI Travel Itinerary Planner uses a LangGraph workflow to manage a set of agents that collaboratively process user inputs (e.g., destination, month, duration) to produce a detailed itinerary, activity suggestions, weather forecasts, packing lists, food/culture recommendations, useful links, and a chat interface. The system supports multiple LLM providers, including Groq (with `llama3-70b-8192` model), and local Ollama for flexible deployment options.
@@ -22,6 +24,7 @@ The AI Travel Itinerary Planner uses a LangGraph workflow to manage a set of age
 * Progress tracking during itinerary generation.
 
 ## Directory Structure
+
 
 ```
 MultiAgents-with-Langgraph-Travel-Itinerary-Planner/
@@ -69,6 +72,7 @@ MultiAgents-with-Langgraph-Travel-Itinerary-Planner/
 git clone https://github.com/Mohit2497/multiagent-travel-itenary-planner.git
 cd MultiAgents-with-Langgraph-Travel-Itinerary-Planner
 ```
+
 
 2. Install dependencies:
 
